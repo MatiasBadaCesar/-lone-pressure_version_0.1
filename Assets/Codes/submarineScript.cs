@@ -10,16 +10,61 @@ public class submarineScript : MonoBehaviour
     //Creamos el Joystick
     public Joystick joystickYAxes;
     Transform tr;
+    GameObject submarine;
+    public float velMovSubmarine = 0;
+    private float maxXmoveSub = 10; 
+    private levelMgrScript.EstadosJuego Call2EstadosSubm;
     void Start()
     {
         tr = GetComponent<Transform>();
+        
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
+        //Tomamos el estado del Juego desde el levelMgr
+        Call2EstadosSubm = levelMgrScript.EstadosJuegoManager;
         //Si el usuario mueve el joystick verticalmente
         tr.position = tr.position + new Vector3(0f,joystickYAxes.Vertical * speedMove * 1,0f); 
+        
+        switch(Call2EstadosSubm)
+        {
+            case levelMgrScript.EstadosJuego.Entrada:
+                    //Ubicamos al submarino en el centro de la scena
+                 if(tr.position.x < maxXmoveSub)
+                {       
+                    tr.position = tr.position + new Vector3(velMovSubmarine,0f,0f); 
+                }
+                else
+                {
+                    levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.Idle; //Si ya llegó a la posición entonces paso al nuevo estado
+                }     
+            break;
+
+            case levelMgrScript.EstadosJuego.SubMuere:
+                gameObject.GetComponent<Rigidbody>().useGravity = true; //Dejamos que actúe la gravedad
+                gameObject.GetComponent<Rigidbody>().isKinematic = false; //Le damos acción a las físicas del RigidBody
+            break;
+
+        }
+
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.name == "Enemigo(Clone)") //Si me colisiona un enemigo
+        {
+            //Destruyo el enemigo
+            Object.Destroy(collision.gameObject);
+            //Le pongo el IsTrigger para que no colisione con nada mas
+            //gameObject.GetComponent<Collider>().isTrigger = true;
+            //Primero guardo el estado de juego en el que estoy
+            levelMgrScript.auxEstadosJuegos = levelMgrScript.EstadosJuegoManager;
+            //Me voy al estaod en el que el Sub ha sido golpeado
+            levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.SubPierdeVida;
+            
+        }
         
     }
 

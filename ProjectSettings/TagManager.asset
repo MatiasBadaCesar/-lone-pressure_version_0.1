@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Jugger
   - Submarino
+  - Enemigo
   layers:
   - Default
   - TransparentFX

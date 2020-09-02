@@ -9,6 +9,7 @@ public class screenMove_Paralax : MonoBehaviour
     public float velocidadScreen;
     Renderer Rnd;
     // Start is called before the first frame update
+    private levelMgrScript.EstadosJuego Call2EstadosScreen;
     void Start()
     {
         //Tomamos el material del Quad
@@ -19,7 +20,17 @@ public class screenMove_Paralax : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Rnd.material.mainTextureOffset = new Vector2(Time.time * velocidadScreen, 0);
-        
+        Call2EstadosScreen = levelMgrScript.EstadosJuegoManager; //Tomamos el estado actual del Juego
+
+        switch(Call2EstadosScreen)
+        {
+            case levelMgrScript.EstadosJuego.Entrada:
+                    
+            break;
+
+            default:
+                Rnd.material.mainTextureOffset = new Vector2(Time.time * velocidadScreen, 0);
+            break;
+        }
     }
 }
