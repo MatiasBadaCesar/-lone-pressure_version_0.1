@@ -13,8 +13,9 @@ private Transform JuggerTransf;
 private float timeAux;
 private Transform trSubmar;
 public float velPursuit;
-float distSubm;
-
+private float distSubm;
+private float juggerInMiddle = -2f;
+private float velMovJuggerAtack1 = 0.1f;
 
     void Start()
     {
@@ -49,9 +50,34 @@ float distSubm;
                 case levelMgrScript.EstadosJuego.JuggerIdle:
                         distSubm = JuggerTransf.position.y - trSubmar.position.y + 2;
                         if(Mathf.Abs(distSubm) > 0.1f)JuggerTransf.position = JuggerTransf.position + new Vector3(0f,distSubm*velPursuit/2*-1,0f); //Perseguimos a la nave
+
+                break;
+
+                case levelMgrScript.EstadosJuego.JuggerPositioning2Atack:   //Posiciono al Jugger en el centro para que esté listo para atacar
+                    
+                    //Primero que nada averiguamos si el Jugger esta por encima o debajo del medio
+                    float juggerDir;
+                    if(JuggerTransf.position.y > juggerInMiddle )juggerDir = -1;
+                    else juggerDir = 1;
+
+                    //Luego lo llevamos a la posición correcta en el centro
+                    if(JuggerTransf.position.y > juggerInMiddle + 0.25 && JuggerTransf.position.y < juggerInMiddle - 0.25 ) JuggerTransf.position = JuggerTransf.position + new Vector3(0f,velMovJuggerAtack1 * juggerDir,0f); 
+                    else levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JuggerAtaca1Timer;
+                break;
+
+                case levelMgrScript.EstadosJuego.JuggerAtaca1Timer:
+                    
+                break;
+
+                case levelMgrScript.EstadosJuego.JuggerAtaca1:
+                    Debug.Log("ATACANDO");
+                    JuggerAnim.SetInteger("jugComp", 2);
+                    levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JuggerAtaca1Timer;
                 break;
 
         }
 
     }
+
+    
 }

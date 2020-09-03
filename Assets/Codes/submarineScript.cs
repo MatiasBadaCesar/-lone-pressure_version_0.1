@@ -12,7 +12,8 @@ public class submarineScript : MonoBehaviour
     Transform tr;
     GameObject submarine;
     public float velMovSubmarine = 0;
-    private float maxXmoveSub = 10; 
+    private float maxXmoveSubEntrada = 10; 
+    private float maxXmoveSubJuggerIn = 24; 
     private levelMgrScript.EstadosJuego Call2EstadosSubm;
     void Start()
     {
@@ -32,7 +33,7 @@ public class submarineScript : MonoBehaviour
         {
             case levelMgrScript.EstadosJuego.Entrada:
                     //Ubicamos al submarino en el centro de la scena
-                 if(tr.position.x < maxXmoveSub)
+                 if(tr.position.x < maxXmoveSubEntrada)
                 {       
                     tr.position = tr.position + new Vector3(velMovSubmarine,0f,0f); 
                 }
@@ -40,6 +41,15 @@ public class submarineScript : MonoBehaviour
                 {
                     levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.Idle; //Si ya llegó a la posición entonces paso al nuevo estado
                 }     
+            break;
+
+            case levelMgrScript.EstadosJuego.JuggerIngresa:
+                
+                if(tr.position.x < maxXmoveSubJuggerIn)
+                {       
+                    tr.position = tr.position + new Vector3(0.25f,0f,0f); 
+                } //Lo movemos al medio, tiene que ser rápido
+
             break;
 
             case levelMgrScript.EstadosJuego.SubMuere:
