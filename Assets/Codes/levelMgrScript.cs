@@ -16,9 +16,7 @@ public class levelMgrScript : MonoBehaviour
 
 
     private float velScreens;
-    private float TiempoTranscurrido;
-    private float TiempoMaxJuggerIn = 10f;
-    private float TiempoRandomIn = 0f;
+
     
     private int lifeSub = 3;
     public Text lifesSubText;
@@ -33,7 +31,7 @@ public class levelMgrScript : MonoBehaviour
     private float time2JuggerStart = 10f; //Seteo el tiempo en que quiero que el Jugger aparezca luego de la fase de los enemigos
     
     private bool flagJuggerIdle2Atack1;
-    private float timeJuggerIdle2Atack1 = 10f;
+
 
 
 //Voy a definir los estados del juego como si fuera una Máquina de Estados
@@ -43,7 +41,7 @@ Idle, //El submarino esta en StandBy y Compite contra objetivos desde la derecha
 JuggerIngresa, //El Jugger ingresa a la scena
 JuggerIdle,
 JuggerPositioning2Atack,
-JuggerAtaca1Timer,
+JuggerAtacaTimer,
 JuggerAtaca1, //El JuggerAtaca de forma 1
 JuggerAtaca2, //El JuggerAtaca de forma 2
 JuggerSale, //El jugger se va
@@ -68,8 +66,7 @@ public static EstadosJuego auxEstadosJuegos;
         switch (EstadosJuegoManager)
         {
             case EstadosJuego.Entrada:
-                    TiempoTranscurrido = Time.time; //Pongo el contador a cero
-                    TiempoRandomIn = Random.Range(TiempoMaxJuggerIn-5, TiempoMaxJuggerIn); //Pongo una variable float para definir un random entre un tiempo - 5s y el tiempo maximo
+
             break;
 
             case EstadosJuego.Idle:
@@ -81,7 +78,7 @@ public static EstadosJuego auxEstadosJuegos;
                     if(!flagJuggerIdle2Positioning)StartCoroutine(timerToJuggerPositioning());
             break;
 
-            case EstadosJuego.JuggerAtaca1Timer:
+            case EstadosJuego.JuggerAtacaTimer:
                     if(!flagJuggerIdle2Atack1)StartCoroutine(timerToJuggerAtack1());
             break;
 
@@ -113,25 +110,14 @@ public static EstadosJuego auxEstadosJuegos;
                 
             break;
 
+            //No interesa en cual de los estados se encuentre
+
             case EstadosJuego.SubMuere:
                //Debug.Log("He morido");
             break;
             
         }
     }
-
-//Mientras el submarino está en Idle, buscamos y determinamos un tiempo para que el Jugger Aparezca
-    private void BuscarTiempoParaJugger()
-    {
-        
-        if(Time.time - TiempoTranscurrido > TiempoRandomIn )
-        {
-            Debug.Log("El tiempo es: " + TiempoRandomIn);
-            EstadosJuegoManager = EstadosJuego.JuggerIngresa;
-        }
-    }
-
-
 
     public void ExitGame()
     {
@@ -176,21 +162,12 @@ public static EstadosJuego auxEstadosJuegos;
     //Función que realiza el Ataque número 1 del Jugger
     IEnumerator timerToJuggerAtack1()
     {
-        Debug.Log("Esperando para el ataque");
+        int tipoAtaque = 0;
         flagJuggerIdle2Atack1 = true; //Evitamos que ingrese nuevamente
         yield return new WaitForSeconds(timeToAtack1);
-        
-        cantAtack1Aux--;
-        if(cantAtack1Aux == 0)
-        {
-            EstadosJuegoManager = EstadosJuego.JuggerIdle;
-            cantAtack1Aux = cantAtack1;
-        }
-        else
-        {
-            EstadosJuegoManager = EstadosJuego.JuggerAtaca1;
-        }
-
+        tipoAtaque = Random.Range(0,2); //Ataco de una u otra manera
+        if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JuggerAtaca1;
+        if(tipoAtaque == 1)EstadosJuegoManager = EstadosJuego.JuggerAtaca2;
         flagJuggerIdle2Atack1 = false; //Evitamos que ingrese nuevamente
     }
 

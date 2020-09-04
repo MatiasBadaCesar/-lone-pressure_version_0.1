@@ -14,6 +14,8 @@ public class submarineScript : MonoBehaviour
     public float velMovSubmarine = 0;
     private float maxXmoveSubEntrada = 10; 
     private float maxXmoveSubJuggerIn = 24; 
+    private float limInferiorScene = -7f;
+    private float limSuperiorScene = 7f;
     private levelMgrScript.EstadosJuego Call2EstadosSubm;
     void Start()
     {
@@ -26,9 +28,13 @@ public class submarineScript : MonoBehaviour
     {
         //Tomamos el estado del Juego desde el levelMgr
         Call2EstadosSubm = levelMgrScript.EstadosJuegoManager;
-        //Si el usuario mueve el joystick verticalmente
-        tr.position = tr.position + new Vector3(0f,joystickYAxes.Vertical * speedMove * 1,0f); 
-        
+
+        //Si el usuario mueve el joystick verticalmente movemos el player, pero solo hasta cierto lugar para que no sobresalga dle mapa y para no tener que utilizar colliders
+        if(tr.position.y >= limInferiorScene && tr.position.y <= limSuperiorScene )tr.position = tr.position + new Vector3(0f,joystickYAxes.Vertical * speedMove * 1,0f); 
+        if(tr.position.y < limInferiorScene)tr.position = new Vector3(tr.position.x,limInferiorScene,tr.position.z);
+        if(tr.position.y > limSuperiorScene)tr.position = new Vector3(tr.position.x,limSuperiorScene,tr.position.z);
+
+
         switch(Call2EstadosSubm)
         {
             case levelMgrScript.EstadosJuego.Entrada:
