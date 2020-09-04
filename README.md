@@ -1,5 +1,5 @@
 # Lone Pressure
 
-### Este juego se encuentra en este momento en producción.
+### Este juego se encuentra en este momento en producciÃ³n.
 
-### NEW Version Unity 2020.1.2f1
+### NEW Version Unity 2020.1.4f1
