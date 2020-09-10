@@ -37,19 +37,26 @@ public class submarineScript : MonoBehaviour
 
         switch(Call2EstadosSubm)
         {
-            case levelMgrScript.EstadosJuego.Entrada:
+            case levelMgrScript.EstadosJuego.ENTRADA:
                     //Ubicamos al submarino en el centro de la scena
-                 if(tr.position.x < maxXmoveSubEntrada)
+                 if(tr.position.x < (maxXmoveSubEntrada - 0.1f))
                 {       
                     tr.position = tr.position + new Vector3(velMovSubmarine,0f,0f); 
                 }
                 else
                 {
-                    levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.Idle; //Si ya llegó a la posición entonces paso al nuevo estado
+                     if(tr.position.x > (maxXmoveSubEntrada + 0.1f))
+                    {       
+                        tr.position = tr.position + new Vector3(velMovSubmarine * -1f,0f,0f); 
+                    }
+                    else
+                    {
+                        levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.PLAYER_IDLE; //Si ya llegó a la posición entonces paso al nuevo estado
+                    }
                 }     
             break;
 
-            case levelMgrScript.EstadosJuego.JuggerIngresa:
+            case levelMgrScript.EstadosJuego.JUGGER_IN:
                 
                 if(tr.position.x < maxXmoveSubJuggerIn)
                 {       
@@ -58,7 +65,7 @@ public class submarineScript : MonoBehaviour
 
             break;
 
-            case levelMgrScript.EstadosJuego.SubMuere:
+            case levelMgrScript.EstadosJuego.PLAYER_DIE:
                 gameObject.GetComponent<Rigidbody>().useGravity = true; //Dejamos que actúe la gravedad
                 gameObject.GetComponent<Rigidbody>().isKinematic = false; //Le damos acción a las físicas del RigidBody
             break;
@@ -78,7 +85,7 @@ public class submarineScript : MonoBehaviour
             //Primero guardo el estado de juego en el que estoy
             levelMgrScript.auxEstadosJuegos = levelMgrScript.EstadosJuegoManager;
             //Me voy al estaod en el que el Sub ha sido golpeado
-            levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.SubPierdeVida;
+            levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.PLAYER_LOST_LIFE;
             
         }
         

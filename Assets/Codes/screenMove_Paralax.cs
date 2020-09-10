@@ -24,7 +24,7 @@ public class screenMove_Paralax : MonoBehaviour
 
         switch(Call2EstadosScreen)
         {
-            case levelMgrScript.EstadosJuego.Entrada:
+            case levelMgrScript.EstadosJuego.ENTRADA:
                     
             break;
 
