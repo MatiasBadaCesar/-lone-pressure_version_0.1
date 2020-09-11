@@ -22,6 +22,7 @@ private float velMovJuggerAtack1 = 0.1f;
         JuggerTransf = GetComponent<Transform>();
         JuggerAnim = GetComponent<Animator>();
         trSubmar = GameObject.FindWithTag("Submarino").GetComponent<Transform>();
+        StartCoroutine(juggerByTime());
     }
 
     // Update is called once per frame
@@ -56,14 +57,80 @@ private float velMovJuggerAtack1 = 0.1f;
                     
                 break;
 
+               
+        }
+
+    }
+
+    private static int CANT_ATAQUES_JUGGER = 3; //Cantidad de ataque que va a realizar el jugger para pasar a la siguiente etapa
+    private static float JUGGER_OUT_SCREEN = -10; //Posición en X en donde el Jugger ya no se ve
+    private float velocityGoOut = 0.4f; //Velocidad con la que el Jugger se va de la pantalla
+    IEnumerator juggerByTime()
+    {
+        for(;;)
+        {
+            switch(Call2EstadosJugger)
+            {
+
                 case levelMgrScript.EstadosJuego.JUGGER_ATACK_1:
-                    JuggerAnim.SetInteger("jugComp", 2);
+                   
+                    int cantAtacks_1;
+
+                    for(cantAtacks_1 = 0; cantAtacks_1 < CANT_ATAQUES_JUGGER; cantAtacks_1++)
+                    {
+                        
+                        JuggerAnim.SetInteger("jugComp" , 2);
+                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_1);
+                        JuggerAnim.SetInteger("jugComp" , 1);
+                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_1);
+                        
+
+                    }
+
+                    levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JUGGER_OUT;
+
                 break;
+
 
                 case levelMgrScript.EstadosJuego.JUGGER_ATACK_2:
-                    JuggerAnim.SetInteger("jugComp", 3);
+                   
+                    int cantAtacks_2;
+
+                    for(cantAtacks_2 = 0; cantAtacks_2 < CANT_ATAQUES_JUGGER; cantAtacks_2++)
+                    {
+                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_2_1);
+                        JuggerAnim.SetInteger("jugComp" , 3);
+                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_2_2);
+                        JuggerAnim.SetInteger("jugComp" , 1);
+                    
+                    }
+
+                    levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JUGGER_OUT;
+
                 break;
 
+                case levelMgrScript.EstadosJuego.JUGGER_OUT:
+                    
+                    JuggerAnim.SetInteger("jugComp" , 4);
+                    yield return new WaitForSeconds(2f);
+
+                    while(JuggerTransf.position.x > JUGGER_OUT_SCREEN)
+                    {
+                        JuggerTransf.position = JuggerTransf.position + new Vector3(-1f * velocityGoOut ,0f,0f);
+                        yield return null;
+                    }
+                    
+                    yield return new WaitForSeconds(3f);
+
+                    levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.ENTRADA;
+
+                    Object.Destroy(this.gameObject);
+
+                break;
+
+            }
+
+            yield return null;
         }
 
     }

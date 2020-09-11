@@ -8,20 +8,21 @@ public class levelMgrScript : MonoBehaviour
     public GameObject Jugger; 
     public GameObject Tank1;
     public GameObject Tank2;
-    public GameObject Tamk3;
 
     private int lifeSub = 3;
     public Text lifesSubText;
-    private static int cantAtack1 = 3;
-    private int cantAtack1Aux = 0;
       
     //Acá irán todos los timers necesarion en el juego ------------------------------------------------------------------------------------------
     public static float TIME_ENEMY_CREATION = 3f; // Acá se setea cada cuanto queremos que el enemigo se genere
     private static float TIME_JUGGER_APARITION = 15f; //Tiempo que transcurre desde que el submarino comienza a esquivar enemigos
     private static float TIME_JUGGER_POSITIONING = 10F; //Tiempo en que pasa de aparece a posicionarse
-    private static float TIME_JUGGER_ATACK = 10f; //Tiempo desde que se posiciona hasta que realiza el ataque cualquiera fuera
-    private static float TIME_JUGGER_ATACKING = 10f; //Tiempo en que el jugger está atacando
+    private static float TIME_JUGGER_ATACK = 5f; //Tiempo desde que se posiciona hasta que realiza el ataque cualquiera fuera
+    public static float TIME_JUGGER_ANIMATION_ATACK_1 = 2.3f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos  
+    public static float TIME_JUGGER_ANIMATION_ATACK_2_1 = 5f; //Tiempo que tardo para volver a poner al Jugger en animación ATACK_2 mientras atacan los enemigos 
+    public static float TIME_JUGGER_ANIMATION_ATACK_2_2 = 2f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos 
     //--------------------------------------------------------------------------------------------------------------------------------------------
+
+    
 
 //Voy a definir los estados del juego como si fuera una Máquina de Estados
 public enum EstadosJuego {
@@ -44,7 +45,6 @@ public static EstadosJuego auxEstadosJuegos;
 
     void Start()
     {
-        cantAtack1Aux = cantAtack1;
         //Inciamos la corutina que va a darnos las funcionalidades temporales
         StartCoroutine("timeManager");
     }
@@ -117,7 +117,7 @@ public static EstadosJuego auxEstadosJuegos;
                         newJugger = Object.Instantiate(Jugger, new Vector3(-10f,-6.19f,-5f), Jugger.transform.rotation);
                         newJugger.GetComponent<Animator>().SetInteger("jugComp",1);
                         yield return new WaitForSeconds(1f);
-                        newJugger.GetComponent<Transform>().position = new Vector3(8.5f,-2,-5);
+                        newJugger.GetComponent<Transform>().position = new Vector3(12f,-2,-5);
                         levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JUGGER_IDLE;
 
                     break;
@@ -137,22 +137,6 @@ public static EstadosJuego auxEstadosJuegos;
                         if(tipoAtaque == 1)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
 
                     break;
-
-                    case EstadosJuego.JUGGER_ATACK_1:
-                       
-                        yield return new WaitForSeconds(TIME_JUGGER_ATACKING);
-                        EstadosJuegoManager = EstadosJuego.ENTRADA;
-
-                    break;
-
-                    case EstadosJuego.JUGGER_ATACK_2:
-                       
-                        yield return new WaitForSeconds(TIME_JUGGER_ATACKING);
-                        EstadosJuegoManager = EstadosJuego.JUGGER_OUT;
-
-                    break;
-
-
 
                     case EstadosJuego.PLAYER_DIE:
                        
