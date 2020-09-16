@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!95 &1783049120
+--- !u!95 &6870629217584493778
 Animator:
   serializedVersion: 3
   m_ObjectHideFlags: 0
@@ -19,7 +19,7 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &1783049121
+--- !u!114 &2215016245733395200
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,14 +95,18 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: -791417688069940755, guid: c879b8b29d283a844865886f48f76450, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d07f46aa5878d964a8db340df4058d52, type: 2}
     - target: {fileID: 919132149155446097, guid: c879b8b29d283a844865886f48f76450, type: 3}
       propertyPath: m_Name
-      value: Juggernaut
+      value: Juggernaut Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 919132149155446097, guid: c879b8b29d283a844865886f48f76450, type: 3}
-      propertyPath: m_TagString
-      value: Jugger
-      objectReference: {fileID: 0}
+    - target: {fileID: 5383082472091195766, guid: c879b8b29d283a844865886f48f76450, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: d07f46aa5878d964a8db340df4058d52, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c879b8b29d283a844865886f48f76450, type: 3}
 --- !u!1 &1873891202905067443 stripped
