@@ -507,6 +507,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rockWall_1: {fileID: 1389674363}
   rockWall_2: {fileID: 969500587}
+  rockPrefab: {fileID: 6807022531314471131, guid: 920650eadfc2f2549af2fbab6a6368d1, type: 3}
 --- !u!1 &720674543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1772,7 +1773,7 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0.2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
