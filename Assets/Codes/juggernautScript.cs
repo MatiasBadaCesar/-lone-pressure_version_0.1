@@ -76,6 +76,9 @@ private float velMovJuggerAtack1 = 0.1f;
                    
                     int cantAtacks_1;
 
+                    //Tengo que sacar el KINEMATIC para que golpee a la nave (Para que funcione el collider)
+                    GetComponent<Collider>().enabled = true;
+
                     for(cantAtacks_1 = 0; cantAtacks_1 < CANT_ATAQUES_JUGGER; cantAtacks_1++)
                     {
                         
@@ -87,6 +90,8 @@ private float velMovJuggerAtack1 = 0.1f;
 
                     }
 
+                    //Tengo que poner el KINEMATIC para que no golpee nada (Para que no funcione el collider)
+                    GetComponent<Collider>().enabled = false;
                     levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JUGGER_OUT;
 
                 break;

@@ -50,7 +50,7 @@ public static EstadosJuego auxEstadosJuegos;
     }
 
     // Update is called once per frame, y solo manejará acciones que no dependan del tiempo
-    void Update()
+    void FixedUpdate()
     {
         lifesSubText.text = lifeSub.ToString(); 
 
@@ -87,6 +87,7 @@ public static EstadosJuego auxEstadosJuegos;
 
             case EstadosJuego.PLAYER_DIE:
                //Debug.Log("He morido");
+               Time.timeScale = 0.0f;
             break;
             
         }
@@ -133,15 +134,13 @@ public static EstadosJuego auxEstadosJuegos;
                        
                         yield return new WaitForSeconds(TIME_JUGGER_ATACK);
                         int tipoAtaque = Random.Range(0,2); //Ataco de una u otra manera
-                        if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_1;
-                        if(tipoAtaque == 1)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
+                        //if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_1;
+                        /*if(tipoAtaque == 1)*/EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
 
                     break;
 
                     case EstadosJuego.PLAYER_DIE:
                        
-                        StopAllCoroutines();
-                   
                     break;
                 
                 

@@ -31,9 +31,13 @@ public class submarineScript : MonoBehaviour
 
         //Si el usuario mueve el joystick verticalmente movemos el player, pero solo hasta cierto lugar para que no sobresalga dle mapa y para no tener que utilizar colliders
         if(tr.position.y >= limInferiorScene && tr.position.y <= limSuperiorScene )tr.position = tr.position + new Vector3(0f,joystickYAxes.Vertical * speedMove * 1,0f); 
-        if(tr.position.y < limInferiorScene)tr.position = new Vector3(tr.position.x,limInferiorScene,tr.position.z);
-        if(tr.position.y > limSuperiorScene)tr.position = new Vector3(tr.position.x,limSuperiorScene,tr.position.z);
-
+        
+        //Solo se le dará límites mientras el submarino no haya muerto
+        if(Call2EstadosSubm != levelMgrScript.EstadosJuego.PLAYER_DIE)
+        {
+            if(tr.position.y < limInferiorScene)tr.position = new Vector3(tr.position.x,limInferiorScene,tr.position.z);
+            if(tr.position.y > limSuperiorScene)tr.position = new Vector3(tr.position.x,limSuperiorScene,tr.position.z);
+        }
 
         switch(Call2EstadosSubm)
         {
@@ -88,7 +92,14 @@ public class submarineScript : MonoBehaviour
             levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.PLAYER_LOST_LIFE;
             
         }
+
         
+        if(collision.gameObject.name == "Juggernaut Variant(Clone)") //Si me colisiona el Jugger
+        {
+            levelMgrScript.auxEstadosJuegos = levelMgrScript.EstadosJuegoManager;
+            levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.PLAYER_LOST_LIFE;           
+        }
+
     }
 
     

@@ -15,7 +15,7 @@ public class backgroundScript : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         //Movemos el fondo hacia la izquierda
         rockWall_1.transform.position = rockWall_1.transform.position + new Vector3(-0.2f,0f,0f);  
