@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class levelMgrScript : MonoBehaviour
 {
@@ -10,7 +11,10 @@ public class levelMgrScript : MonoBehaviour
     public GameObject Tank2;
 
     private int lifeSub = 3;
-    public Text lifesSubText;
+    public Text lifesSubText; //Muestra la cantidad de vidas restantes
+
+    public Text timeScoreText; //Muestra el tiempo que el jugador lleva jugando desde que comenzó
+    public Text gameOverText; //Texto de GAME OVER
       
     //Acá irán todos los timers necesarion en el juego ------------------------------------------------------------------------------------------
     public static float TIME_ENEMY_CREATION = 3f; // Acá se setea cada cuanto queremos que el enemigo se genere
@@ -20,6 +24,7 @@ public class levelMgrScript : MonoBehaviour
     public static float TIME_JUGGER_ANIMATION_ATACK_1 = 2.3f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos  
     public static float TIME_JUGGER_ANIMATION_ATACK_2_1 = 5f; //Tiempo que tardo para volver a poner al Jugger en animación ATACK_2 mientras atacan los enemigos 
     public static float TIME_JUGGER_ANIMATION_ATACK_2_2 = 2f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos 
+    public static float TIME_FLECHA_ANIMADA = 3f; //Tiempo que la flecha animada se va a ver en la escena
     //--------------------------------------------------------------------------------------------------------------------------------------------
 
     
@@ -43,10 +48,17 @@ public enum EstadosJuego {
 public static EstadosJuego EstadosJuegoManager;
 public static EstadosJuego auxEstadosJuegos;
 
+
     void Start()
     {
         //Inciamos la corutina que va a darnos las funcionalidades temporales
         StartCoroutine("timeManager");
+        StartCoroutine("timeCounter");
+
+        //Definimos estados iniciales para cuando se recargue el juego
+        EstadosJuegoManager = EstadosJuego.ENTRADA;
+        tiempoTransc = Time.realtimeSinceStartup;
+        //Object.Destroy(gameOverText);
     }
 
     // Update is called once per frame, y solo manejará acciones que no dependan del tiempo
@@ -60,7 +72,7 @@ public static EstadosJuego auxEstadosJuegos;
                 //Realizo la acción pertinente y vuelvo al estado en el que estaba
                 lifeSub--;
 
-                Debug.Log("Las Vidas Son: " + lifeSub);
+                //Debug.Log("Las Vidas Son: " + lifeSub);
 
                 switch(lifeSub) //Manejo de las vidas
                 {
@@ -88,6 +100,7 @@ public static EstadosJuego auxEstadosJuegos;
             case EstadosJuego.PLAYER_DIE:
                //Debug.Log("He morido");
                Time.timeScale = 0.0f;
+               //Object.Instantiate(gameOverText, new Vector3(-12f,0f,-9f), gameOverText.transform.rotation); 
             break;
             
         }
@@ -96,6 +109,13 @@ public static EstadosJuego auxEstadosJuegos;
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+    private float tiempoTransc = 0f;
+    public void rechargeLevel()
+    {
+        SceneManager.LoadScene("Nivel1");
+        Time.timeScale = 1.0f;
     }
 
     IEnumerator timeManager() //CORUTINA QUE MANEJA LOS TIEMPOS DEL JUEGO
@@ -134,8 +154,8 @@ public static EstadosJuego auxEstadosJuegos;
                        
                         yield return new WaitForSeconds(TIME_JUGGER_ATACK);
                         int tipoAtaque = Random.Range(0,2); //Ataco de una u otra manera
-                        //if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_1;
-                        /*if(tipoAtaque == 1)*/EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
+                        if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_1;
+                        if(tipoAtaque == 1)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
 
                     break;
 
@@ -150,6 +170,25 @@ public static EstadosJuego auxEstadosJuegos;
             }
 
 
+    }
+
+    IEnumerator timeCounter() //Calcula el Score dado por el tiempo
+    {
+            for(;;)
+            {
+                timeScoreText.text = CalcularTiempo(Time.realtimeSinceStartup - tiempoTransc);
+                yield return new WaitForSeconds(1f);
+            }
+
+
+    }
+
+    private string CalcularTiempo(float t_segundos) //Función para convertir segundos en Horas, Minutos y Segundos
+    {
+        int horas = Mathf.FloorToInt((t_segundos / 3600));
+        int minutos = Mathf.FloorToInt(((t_segundos-horas*3600)/60));
+        float segundos = t_segundos-(horas*3600+minutos*60);
+        return horas.ToString() + ":" + minutos.ToString() + ":" + segundos.ToString();
     }
  
 }

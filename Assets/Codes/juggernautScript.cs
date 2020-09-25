@@ -65,6 +65,7 @@ private float velMovJuggerAtack1 = 0.1f;
     private static int CANT_ATAQUES_JUGGER = 3; //Cantidad de ataque que va a realizar el jugger para pasar a la siguiente etapa
     private static float JUGGER_OUT_SCREEN = -10; //Posición en X en donde el Jugger ya no se ve
     private float velocityGoOut = 0.4f; //Velocidad con la que el Jugger se va de la pantalla
+    public static bool sincronicedEnemy = false; 
     IEnumerator juggerByTime()
     {
         for(;;)
@@ -78,6 +79,7 @@ private float velMovJuggerAtack1 = 0.1f;
 
                     //Tengo que sacar el KINEMATIC para que golpee a la nave (Para que funcione el collider)
                     GetComponent<Collider>().enabled = true;
+                    GetComponent<Rigidbody>().isKinematic = false;
 
                     for(cantAtacks_1 = 0; cantAtacks_1 < CANT_ATAQUES_JUGGER; cantAtacks_1++)
                     {
@@ -91,6 +93,7 @@ private float velMovJuggerAtack1 = 0.1f;
                     }
 
                     //Tengo que poner el KINEMATIC para que no golpee nada (Para que no funcione el collider)
+                    GetComponent<Rigidbody>().isKinematic = true;
                     GetComponent<Collider>().enabled = false;
                     levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JUGGER_OUT;
 
@@ -103,10 +106,12 @@ private float velMovJuggerAtack1 = 0.1f;
 
                     for(cantAtacks_2 = 0; cantAtacks_2 < CANT_ATAQUES_JUGGER; cantAtacks_2++)
                     {
-                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_2_1);
+                        
                         JuggerAnim.SetInteger("jugComp" , 3);
                         yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_2_2);
+                        sincronicedEnemy = true; //Le aviso al enemiGenerator que estoy haciendo el primer ataque;
                         JuggerAnim.SetInteger("jugComp" , 1);
+                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_2_1);
                     
                     }
 
