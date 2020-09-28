@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 4c4413d69ddbbf8428164e9ef27bc2bc
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - CryptCreep BB
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 76920eb1e58ef234fbd2e9b0b3931fea, type: 3}
+  - {fileID: 12800000, guid: 08aa145fc30f6814b9267d94af90e69e, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
