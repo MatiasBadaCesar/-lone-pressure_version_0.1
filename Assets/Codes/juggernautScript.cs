@@ -5,7 +5,6 @@ using UnityEngine;
 public class juggernautScript : MonoBehaviour
 {
 
-    // Start is called before the first frame update
 private levelMgrScript.EstadosJuego Call2EstadosJugger; //Variable para tomar los estados del juego, que debe ser del mismo tipo del otro script
     //Tomamos el transform para correr el Jugger hasta que comience el ataque
 private Animator JuggerAnim;
@@ -66,6 +65,7 @@ private float velMovJuggerAtack1 = 0.1f;
     private static float JUGGER_OUT_SCREEN = -10; //Posición en X en donde el Jugger ya no se ve
     private float velocityGoOut = 0.4f; //Velocidad con la que el Jugger se va de la pantalla
     public static bool sincronicedEnemy = false; 
+    public static bool sincroniceOut = false;
     IEnumerator juggerByTime()
     {
         for(;;)
@@ -122,6 +122,9 @@ private float velMovJuggerAtack1 = 0.1f;
                 case levelMgrScript.EstadosJuego.JUGGER_OUT:
                     
                     JuggerAnim.SetInteger("jugComp" , 4);
+
+                    sincroniceOut = true; //Le avisamos al levelMgr que ya puede reproducir los sonidos necesarios 
+
                     yield return new WaitForSeconds(2f);
 
                     while(JuggerTransf.position.x > JUGGER_OUT_SCREEN)
@@ -129,9 +132,11 @@ private float velMovJuggerAtack1 = 0.1f;
                         JuggerTransf.position = JuggerTransf.position + new Vector3(-1f * velocityGoOut ,0f,0f);
                         yield return null;
                     }
+
+                    
                     
                     yield return new WaitForSeconds(3f);
-
+                   
                     levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.ENTRADA;
 
                     Object.Destroy(this.gameObject);

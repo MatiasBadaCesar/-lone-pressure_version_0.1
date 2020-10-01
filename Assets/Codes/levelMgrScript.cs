@@ -7,14 +7,36 @@ using UnityEngine.SceneManagement;
 public class levelMgrScript : MonoBehaviour
 {
     public GameObject Jugger; 
+    private GameObject juggerInstanciate;
     public GameObject Tank1;
     public GameObject Tank2;
+
+
 
     private int lifeSub = 3;
     public Text lifesSubText; //Muestra la cantidad de vidas restantes
 
     public Text timeScoreText; //Muestra el tiempo que el jugador lleva jugando desde que comenzó
-    public Text gameOverText; //Texto de GAME OVER
+    public GameObject gameOverText; //Texto de GAME OVER
+
+    //---------------------------- SONIDOS --------------------------------------------------------
+
+    [Header("Sonidos del Juego")]
+    public GameObject[] soundsOfGame;
+
+    public enum soundsNames {
+        juggerIn = 0,
+        juggerOut,
+        fondoNormal,
+        fondoJugger,
+        mordiscoJugger,
+        invocacionJugger,
+        golpeNave
+
+
+    }
+
+    //---------------------------------------------------------------------------------------------
       
     //Acá irán todos los timers necesarion en el juego ------------------------------------------------------------------------------------------
     public static float TIME_ENEMY_CREATION = 3f; // Acá se setea cada cuanto queremos que el enemigo se genere
@@ -25,17 +47,19 @@ public class levelMgrScript : MonoBehaviour
     public static float TIME_JUGGER_ANIMATION_ATACK_2_1 = 5f; //Tiempo que tardo para volver a poner al Jugger en animación ATACK_2 mientras atacan los enemigos 
     public static float TIME_JUGGER_ANIMATION_ATACK_2_2 = 2f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos 
     public static float TIME_FLECHA_ANIMADA = 3f; //Tiempo que la flecha animada se va a ver en la escena
+    public static float TIME_SUBMARINE_INVULNERABLE = 5f; //Tiempo en que el submarino es invulnerable
     //--------------------------------------------------------------------------------------------------------------------------------------------
 
     
+
 
 //Voy a definir los estados del juego como si fuera una Máquina de Estados
 public enum EstadosJuego {
     ENTRADA, //El juego comienza
     PLAYER_IDLE, //El submarino esta en StandBy y Compite contra objetivos desde la derecha
     JUGGER_IN, //El Jugger ingresa a la scena
-    JUGGER_IDLE,
-    JUGGER_2_ATACK,
+    JUGGER_IDLE, //El jugger esta por un tiempo en idle siguiendo al submarino
+    JUGGER_2_ATACK, //El jugger se posiciona para atacar
     JUGGER_ATACK_TIMER,
     JUGGER_ATACK_1, //El JuggerAtaca de forma 1
     JUGGER_ATACK_2, //El JuggerAtaca de forma 2
@@ -51,6 +75,9 @@ public static EstadosJuego auxEstadosJuegos;
 
     void Start()
     {
+        //Apago el Texto de Game Over
+        gameOverText.SetActive(false);
+
         //Inciamos la corutina que va a darnos las funcionalidades temporales
         StartCoroutine("timeManager");
         StartCoroutine("timeCounter");
@@ -58,8 +85,14 @@ public static EstadosJuego auxEstadosJuegos;
         //Definimos estados iniciales para cuando se recargue el juego
         EstadosJuegoManager = EstadosJuego.ENTRADA;
         tiempoTransc = Time.realtimeSinceStartup;
-        //Object.Destroy(gameOverText);
+
+        //Comenzamos con el sonido de fondo normal
+        repSonidos(soundsNames.fondoNormal, true, false, 0f);
+
     }
+
+    //Flags para que no se vuelvan a repetir las acciones...
+    private bool flagExecute = false;
 
     // Update is called once per frame, y solo manejará acciones que no dependan del tiempo
     void FixedUpdate()
@@ -68,23 +101,68 @@ public static EstadosJuego auxEstadosJuegos;
 
         switch (EstadosJuegoManager)
         {
+
+            case EstadosJuego.JUGGER_ATACK_1:
+
+
+                if(juggerInstanciate.GetComponent<Animator>().GetInteger("jugComp") == 2 && flagExecute == false) //Significa que lanza el ataque;
+                {
+                    repSonidos(soundsNames.mordiscoJugger, false, true, 2f); //Iniciamos el sonido de Jugger de entrada por 3s
+                    flagExecute = true;
+                }
+                else
+                {
+                    flagExecute = false;
+                }
+
+            break;
+
+            case EstadosJuego.JUGGER_ATACK_2:
+                
+                if(juggerInstanciate.GetComponent<Animator>().GetInteger("jugComp") == 3 && flagExecute == false) //Significa que lanza el ataque;
+                {
+                    repSonidos(soundsNames.invocacionJugger, false, true, 3.5f); //Iniciamos el sonido de Jugger de entrada por 3s
+                    flagExecute = true;
+                }
+                else
+                {
+                    flagExecute = false;
+                }
+
+            break;
+
+            case EstadosJuego.JUGGER_OUT:
+               
+                if(juggernautScript.sincroniceOut == true)
+                {
+                        repSonidos(soundsNames.fondoNormal, true, false, 0f); //Detenemos el sonido normal
+                        repSonidos(soundsNames.fondoJugger, false, false, 0f); //Iniciamos el sonido de Jugger de fondo
+                        repSonidos(soundsNames.juggerOut, false, true, 5f); //Iniciamos el sonido de Jugger de entrada por 3s
+                        juggernautScript.sincroniceOut = false;
+                }
+
+            break;
+
             case EstadosJuego.PLAYER_LOST_LIFE:
+
                 //Realizo la acción pertinente y vuelvo al estado en el que estaba
                 lifeSub--;
 
-                //Debug.Log("Las Vidas Son: " + lifeSub);
+                repSonidos(soundsNames.golpeNave, false, true, 2f); //Iniciamos el sonido de Jugger de entrada por 3s
 
                 switch(lifeSub) //Manejo de las vidas
                 {
                     case 2:
                         Tank1.GetComponent<Rigidbody>().useGravity = true; //Activo Grabedad para que se caiga el tanque
                         Tank1.GetComponent<Rigidbody>().isKinematic = false; //Le saco el kinematic para que le afecte la gravedad
+                        Object.Destroy(Tank1, 3f);
                         EstadosJuegoManager = auxEstadosJuegos; //Volvemos al estado en el que estaba
                     break;
 
                     case 1:
                         Tank2.GetComponent<Rigidbody>().useGravity = true; //Activo Grabedad para que se caiga el tanque
                         Tank2.GetComponent<Rigidbody>().isKinematic = false; //Le saco el kinematic para que le afecte la gravedad
+                        Object.Destroy(Tank2, 3f);
                         EstadosJuegoManager = auxEstadosJuegos; //Volvemos al estado en el que estaba
                     break;
 
@@ -98,9 +176,10 @@ public static EstadosJuego auxEstadosJuegos;
             //No interesa en cual de los estados se encuentre
 
             case EstadosJuego.PLAYER_DIE:
-               //Debug.Log("He morido");
+
                Time.timeScale = 0.0f;
-               //Object.Instantiate(gameOverText, new Vector3(-12f,0f,-9f), gameOverText.transform.rotation); 
+               gameOverText.SetActive(true);
+
             break;
             
         }
@@ -118,7 +197,7 @@ public static EstadosJuego auxEstadosJuegos;
         Time.timeScale = 1.0f;
     }
 
-    IEnumerator timeManager() //CORUTINA QUE MANEJA LOS TIEMPOS DEL JUEGO
+    private IEnumerator timeManager() //CORUTINA QUE MANEJA LOS TIEMPOS DEL JUEGO
     {
 
             for(;;) //Se ejecuta por siempre
@@ -134,11 +213,14 @@ public static EstadosJuego auxEstadosJuegos;
 
                     case EstadosJuego.JUGGER_IN:
                         
-                        GameObject newJugger;
-                        newJugger = Object.Instantiate(Jugger, new Vector3(-10f,-6.19f,-5f), Jugger.transform.rotation);
-                        newJugger.GetComponent<Animator>().SetInteger("jugComp",1);
+                        repSonidos(soundsNames.fondoNormal, false, false, 0f); //Detenemos el sonido normal
+                        repSonidos(soundsNames.fondoJugger, true, false, 0f); //Iniciamos el sonido de Jugger de fondo
+                        repSonidos(soundsNames.juggerIn, false, true, 3.5f); //Iniciamos el sonido de Jugger de entrada por 3s
+
+                        juggerInstanciate = Object.Instantiate(Jugger, new Vector3(-10f,-6.19f,-5f), Jugger.transform.rotation);
+                        juggerInstanciate.GetComponent<Animator>().SetInteger("jugComp",1);
                         yield return new WaitForSeconds(1f);
-                        newJugger.GetComponent<Transform>().position = new Vector3(12f,-2,-5);
+                        juggerInstanciate.GetComponent<Transform>().position = new Vector3(12f,-2,-5);
                         levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.JUGGER_IDLE;
 
                     break;
@@ -172,7 +254,7 @@ public static EstadosJuego auxEstadosJuegos;
 
     }
 
-    IEnumerator timeCounter() //Calcula el Score dado por el tiempo
+    private IEnumerator timeCounter() //Calcula el Score dado por el tiempo
     {
             for(;;)
             {
@@ -190,5 +272,29 @@ public static EstadosJuego auxEstadosJuegos;
         float segundos = t_segundos-(horas*3600+minutos*60);
         return horas.ToString() + ":" + minutos.ToString() + ":" + segundos.ToString();
     }
+
+    public void repSonidos(soundsNames soundGO , bool activateSound,bool oneShot, float timeToSound) {
+        
+        if(oneShot == true) //Si solo quiero que suene una vez y por un tiempo
+        {
+            StartCoroutine(repSoundByTime(soundsOfGame[(int)soundGO].GetComponent<AudioSource>(), timeToSound));
+        }
+        else   //Si se va a reproducir por siempre 
+        {
+            if(activateSound == true)soundsOfGame[(int)soundGO].GetComponent<AudioSource>().enabled = true;
+            else soundsOfGame[(int)soundGO].GetComponent<AudioSource>().enabled = false;
+        }
+
+    }
+
+//Reproducimos el audio solo por un tiempo
+    private IEnumerator repSoundByTime(AudioSource audioSource, float timeToRep)
+    {
+        audioSource.enabled = true;
+        yield return new WaitForSeconds(timeToRep);
+        audioSource.enabled = false;
+    }
+
+ 
  
 }
