@@ -2,19 +2,26 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - DynamicJoystick
+    - backgroundScript
+    - enemyGenerator
+    - enemyScript
+    - invulnSubScript
     - juggernautScript
     - levelMgrScript
-    - screenMove_Paralax
     - submarineScript
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
+    Unity.TextMeshPro.dll:
+    - TMPro.TMP_FontAsset
+    - TMPro.TMP_Settings
+    - TMPro.TMP_SpriteAsset
+    - TMPro.TMP_StyleSheet
+    - TMPro.TextMeshProUGUI
     UnityEditor.Graphs.dll:
     - UnityEditor.Graphs.AnimationBlendTree.Graph
     - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
@@ -48,17 +55,17 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
-    - Class: 50
+    - Class: 49
       Script: {instanceID: 0}
-    - Class: 58
-      Script: {instanceID: 0}
-    - Class: 61
-      Script: {instanceID: 0}
-    - Class: 64
+    - Class: 54
       Script: {instanceID: 0}
     - Class: 74
       Script: {instanceID: 0}
     - Class: 81
+      Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
       Script: {instanceID: 0}
     - Class: 91
       Script: {instanceID: 0}
@@ -69,38 +76,58 @@ ScriptsOnlyBuild:
     - Class: 108
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 11698}
+      Script: {instanceID: 11812}
     - Class: 114
-      Script: {instanceID: 11722}
+      Script: {instanceID: 11836}
     - Class: 114
-      Script: {instanceID: 11774}
+      Script: {instanceID: 11888}
     - Class: 114
-      Script: {instanceID: 11902}
+      Script: {instanceID: 12016}
     - Class: 114
-      Script: {instanceID: 12332}
+      Script: {instanceID: 12146}
     - Class: 114
-      Script: {instanceID: 12380}
+      Script: {instanceID: 12498}
     - Class: 114
-      Script: {instanceID: 12842}
+      Script: {instanceID: 12530}
     - Class: 114
-      Script: {instanceID: 13128}
+      Script: {instanceID: 12960}
     - Class: 114
-      Script: {instanceID: 13384}
+      Script: {instanceID: 13122}
     - Class: 114
-      Script: {instanceID: 13622}
+      Script: {instanceID: 13210}
     - Class: 114
-      Script: {instanceID: 13772}
+      Script: {instanceID: 13226}
     - Class: 114
-      Script: {instanceID: 13810}
+      Script: {instanceID: 13248}
+    - Class: 114
+      Script: {instanceID: 13268}
+    - Class: 114
+      Script: {instanceID: 13440}
+    - Class: 114
+      Script: {instanceID: 13506}
+    - Class: 114
+      Script: {instanceID: 13676}
+    - Class: 114
+      Script: {instanceID: 13688}
+    - Class: 114
+      Script: {instanceID: 13746}
+    - Class: 114
+      Script: {instanceID: 13896}
+    - Class: 114
+      Script: {instanceID: 13934}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
+      Script: {instanceID: 0}
+    - Class: 135
       Script: {instanceID: 0}
     - Class: 137
       Script: {instanceID: 0}
     - Class: 157
       Script: {instanceID: 0}
     - Class: 196
+      Script: {instanceID: 0}
+    - Class: 212
       Script: {instanceID: 0}
     - Class: 213
       Script: {instanceID: 0}
@@ -225,6 +252,12 @@ ScriptsOnlyBuild:
     className: GridLayoutGroup
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: enemyScript
+  - hash:
+      serializedVersion: 2
       Hash: 8aa3d6ccbcb54ee8db6c1229854adaaa
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -283,6 +316,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: AnimationPlayableAsset
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: pruebasScript
   - hash:
       serializedVersion: 2
       Hash: aba7b2852ef61d175dd9602e7723d5e5
@@ -387,6 +426,12 @@ ScriptsOnlyBuild:
     className: VerticalLayoutGroup
   - hash:
       serializedVersion: 2
+      Hash: c7193e0648d6cbabd9cf4c16b852ad33
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: enemyGenerator
+  - hash:
+      serializedVersion: 2
       Hash: f7bb6096199e0cf058d5d69878184cf4
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -433,6 +478,12 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: DynamicJoystick
+  - hash:
+      serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: invulnSubScript
   - hash:
       serializedVersion: 2
       Hash: ce669872a2be11bc686ea22961d8a3bb
@@ -489,7 +540,13 @@ ScriptsOnlyBuild:
     className: TMP_StyleSheet
   - hash:
       serializedVersion: 2
-      Hash: f42f04493ed9f6f6e3835a83d633ec66
+      Hash: 39ea7de19df7c2d5ba562f3ac66806cc
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: backgroundScript
+  - hash:
+      serializedVersion: 2
+      Hash: a9ccf32d9d5d037d768d57c3a60e811d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: submarineScript
@@ -585,7 +642,7 @@ ScriptsOnlyBuild:
     className: Slider
   - hash:
       serializedVersion: 2
-      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+      Hash: c9acbeca30511d5ae7ec03b8135bfc51
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: levelMgrScript
@@ -604,4 +661,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/Nivel1.unity
-  playerPath: C:/Users/MDNTEC - OPENCV/Desktop/Unity/Builds/lone_Pressure/lonePressureShow.apk
+  playerPath: C:/Users/MDNTEC - OPENCV/Desktop/Unity/Builds/lone_Pressure/lonePressureShow_AlfaTest.apk

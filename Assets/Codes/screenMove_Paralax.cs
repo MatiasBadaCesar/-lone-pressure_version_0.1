@@ -18,7 +18,7 @@ public class screenMove_Paralax : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         Call2EstadosScreen = levelMgrScript.EstadosJuegoManager; //Tomamos el estado actual del Juego
 

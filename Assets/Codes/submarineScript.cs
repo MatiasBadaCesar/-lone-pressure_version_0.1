@@ -5,7 +5,9 @@ using UnityEngine;
 public class submarineScript : MonoBehaviour
 {
     // Start is called before the first frame update
-    public float speedMove = 1f;
+    
+    public GameObject shieldSub;
+    public float speedMove = 0.5f;
 
     //Creamos el Joystick
     public Joystick joystickYAxes;
@@ -17,9 +19,13 @@ public class submarineScript : MonoBehaviour
     private float limInferiorScene = -7f;
     private float limSuperiorScene = 7f;
     private levelMgrScript.EstadosJuego Call2EstadosSubm;
+
+    private bool flagSound;
+
     void Start()
     {
         tr = GetComponent<Transform>();
+        shieldSub.SetActive(false);
         
     }
 
@@ -31,14 +37,19 @@ public class submarineScript : MonoBehaviour
 
         //Si el usuario mueve el joystick verticalmente movemos el player, pero solo hasta cierto lugar para que no sobresalga dle mapa y para no tener que utilizar colliders
         if(tr.position.y >= limInferiorScene && tr.position.y <= limSuperiorScene )tr.position = tr.position + new Vector3(0f,joystickYAxes.Vertical * speedMove * 1,0f); 
-        if(tr.position.y < limInferiorScene)tr.position = new Vector3(tr.position.x,limInferiorScene,tr.position.z);
-        if(tr.position.y > limSuperiorScene)tr.position = new Vector3(tr.position.x,limSuperiorScene,tr.position.z);
-
+        
+        //Solo se le dará límites mientras el submarino no haya muerto
+        if(Call2EstadosSubm != levelMgrScript.EstadosJuego.PLAYER_DIE)
+        {
+            if(tr.position.y < limInferiorScene)tr.position = new Vector3(tr.position.x,limInferiorScene,tr.position.z);
+            if(tr.position.y > limSuperiorScene)tr.position = new Vector3(tr.position.x,limSuperiorScene,tr.position.z);
+        }
 
         switch(Call2EstadosSubm)
         {
             case levelMgrScript.EstadosJuego.ENTRADA:
-                    //Ubicamos al submarino en el centro de la scena
+
+                    //Ubicamos al submarino en el centro de la escena
                  if(tr.position.x < (maxXmoveSubEntrada - 0.1f))
                 {       
                     tr.position = tr.position + new Vector3(velMovSubmarine,0f,0f); 
@@ -66,8 +77,11 @@ public class submarineScript : MonoBehaviour
             break;
 
             case levelMgrScript.EstadosJuego.PLAYER_DIE:
-                gameObject.GetComponent<Rigidbody>().useGravity = true; //Dejamos que actúe la gravedad
-                gameObject.GetComponent<Rigidbody>().isKinematic = false; //Le damos acción a las físicas del RigidBody
+
+            break;
+
+            case levelMgrScript.EstadosJuego.PLAYER_LOST_LIFE:
+                
             break;
 
         }
@@ -76,19 +90,43 @@ public class submarineScript : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        //Si me pega algo me hago invulnerable
+        StartCoroutine(invulnerabilidadSub());
+
         if(collision.gameObject.name == "Enemigo(Clone)") //Si me colisiona un enemigo
         {
             //Destruyo el enemigo
             Object.Destroy(collision.gameObject);
-            //Le pongo el IsTrigger para que no colisione con nada mas
-            //gameObject.GetComponent<Collider>().isTrigger = true;
             //Primero guardo el estado de juego en el que estoy
             levelMgrScript.auxEstadosJuegos = levelMgrScript.EstadosJuegoManager;
             //Me voy al estaod en el que el Sub ha sido golpeado
             levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.PLAYER_LOST_LIFE;
             
         }
+
         
+        if(collision.gameObject.name == "Juggernaut Variant(Clone)") //Si me colisiona el Jugger
+        {
+            levelMgrScript.auxEstadosJuegos = levelMgrScript.EstadosJuegoManager;
+            levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.PLAYER_LOST_LIFE;           
+        }
+
+    }
+
+       //Hace invulnerable al submarino por un cierto tiempo
+    IEnumerator invulnerabilidadSub()
+    {
+        //Muestro el "ESCUDO"
+        shieldSub.SetActive(true);
+        //Lo hago invulnerable a los colliders
+        gameObject.GetComponent<SphereCollider>().isTrigger = true;
+        //Espero una cantidad de tiempo
+        yield return new WaitForSeconds(levelMgrScript.TIME_SUBMARINE_INVULNERABLE);
+        //Le regreso el collider
+        gameObject.GetComponent<SphereCollider>().isTrigger = false;
+        //Borro el "ESCUDO"
+        shieldSub.SetActive(false);
+
     }
 
     
