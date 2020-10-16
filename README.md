@@ -2,4 +2,4 @@
 
 ### Este juego se encuentra en este momento en producción.
 
-### NEW Version Unity 2020.1.4f1
+### Version Unity 2020.1.6f1
