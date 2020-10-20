@@ -14,7 +14,7 @@ public class submarineScript : MonoBehaviour
     Transform tr;
     GameObject submarine;
     public float velMovSubmarine = 0;
-    private float maxXmoveSubEntrada = 10; 
+    private float maxXmoveSubEntrada = 15; 
     private float maxXmoveSubJuggerIn = 24; 
     private float limInferiorScene = -7f;
     private float limSuperiorScene = 7f;

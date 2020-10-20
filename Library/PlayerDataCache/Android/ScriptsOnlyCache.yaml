@@ -9,6 +9,9 @@ ScriptsOnlyBuild:
     - juggernautScript
     - levelMgrScript
     - submarineScript
+    Unity.CollabProxy.Editor.dll:
+    - Unity.Cloud.Collaborate.UserInterface.CollaborateWindow
+    - Unity.Cloud.Collaborate.UserInterface.WindowCache
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     Unity.TextMeshPro.dll:
@@ -661,4 +664,4 @@ ScriptsOnlyBuild:
   platform: 13
   scenePathNames:
   - Assets/Scenes/Nivel1.unity
-  playerPath: C:/Users/MDNTEC - OPENCV/Desktop/Unity/Builds/lone_Pressure/lonePressureShow_AlfaTest.apk
+  playerPath: C:/Users/MDNTEC - OPENCV/Desktop/Unity/Builds/lone_Pressure/lonePressureShow_AlfaTest_v2.0.apk

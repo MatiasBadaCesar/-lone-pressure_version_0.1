@@ -39,10 +39,10 @@ public class levelMgrScript : MonoBehaviour
     //---------------------------------------------------------------------------------------------
       
     //Acá irán todos los timers necesarion en el juego ------------------------------------------------------------------------------------------
-    public static float TIME_ENEMY_CREATION = 3f; // Acá se setea cada cuanto queremos que el enemigo se genere
+    public static float TIME_ENEMY_CREATION = 1f; // Acá se setea cada cuanto queremos que el enemigo se genere
     private static float TIME_JUGGER_APARITION = 15f; //Tiempo que transcurre desde que el submarino comienza a esquivar enemigos
     private static float TIME_JUGGER_POSITIONING = 10F; //Tiempo en que pasa de aparece a posicionarse
-    private static float TIME_JUGGER_ATACK = 5f; //Tiempo desde que se posiciona hasta que realiza el ataque cualquiera fuera
+    private static float TIME_JUGGER_ATACK = 3f; //Tiempo desde que se posiciona hasta que realiza el ataque cualquiera fuera
     public static float TIME_JUGGER_ANIMATION_ATACK_1 = 2.3f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos  
     public static float TIME_JUGGER_ANIMATION_ATACK_2_1 = 5f; //Tiempo que tardo para volver a poner al Jugger en animación ATACK_2 mientras atacan los enemigos 
     public static float TIME_JUGGER_ANIMATION_ATACK_2_2 = 2f; //Tiempo que tardo para volver a poner al Jugger en animación IDLE mientras atacan los enemigos 
@@ -84,7 +84,7 @@ public static EstadosJuego auxEstadosJuegos;
 
         //Definimos estados iniciales para cuando se recargue el juego
         EstadosJuegoManager = EstadosJuego.ENTRADA;
-        tiempoTransc = Time.realtimeSinceStartup;
+        //tiempoTransc = Time.realtimeSinceStartup;  //#### DESECHADO DESDE QUE SE DESCUBRE QUE HAY UNA VARIABLE QUE TE LARGA LOS SEGUNDOS DESDE LA RECARGA ####
 
         //Comenzamos con el sonido de fondo normal
         repSonidos(soundsNames.fondoNormal, true, false, 0f);
@@ -190,13 +190,15 @@ public static EstadosJuego auxEstadosJuegos;
         Application.Quit();
     }
 
-    private float tiempoTransc = 0f;
+    //private float tiempoTransc = 0f; //#### OBSOLETO ####
     public void rechargeLevel()
     {
         SceneManager.LoadScene("Nivel1");
         Time.timeScale = 1.0f;
     }
 
+    private int CantAtaks = 3;
+    private int CantAtaks_Actual = 0;
     private IEnumerator timeManager() //CORUTINA QUE MANEJA LOS TIEMPOS DEL JUEGO
     {
 
@@ -206,17 +208,24 @@ public static EstadosJuego auxEstadosJuegos;
                 {
                     case EstadosJuego.PLAYER_IDLE:
                        
-                        yield return new WaitForSeconds(TIME_JUGGER_APARITION);
+                        yield return new WaitForSeconds(TIME_JUGGER_APARITION);                   
                         EstadosJuegoManager = EstadosJuego.JUGGER_IN;
 
                     break;
 
                     case EstadosJuego.JUGGER_IN:
                         
+                        while(GameObject.Find("Enemigo(Clone)")!=null) //Esperamos a que todas los enemigos mueran
+                        {
+                            yield return new WaitForSeconds(0.5f);
+                        }  
+
+
                         repSonidos(soundsNames.fondoNormal, false, false, 0f); //Detenemos el sonido normal
                         repSonidos(soundsNames.fondoJugger, true, false, 0f); //Iniciamos el sonido de Jugger de fondo
                         repSonidos(soundsNames.juggerIn, false, true, 3.5f); //Iniciamos el sonido de Jugger de entrada por 3s
 
+                        
                         juggerInstanciate = Object.Instantiate(Jugger, new Vector3(-10f,-6.19f,-5f), Jugger.transform.rotation);
                         juggerInstanciate.GetComponent<Animator>().SetInteger("jugComp",1);
                         yield return new WaitForSeconds(1f);
@@ -227,17 +236,37 @@ public static EstadosJuego auxEstadosJuegos;
 
                     case EstadosJuego.JUGGER_IDLE:
                        
-                        yield return new WaitForSeconds(TIME_JUGGER_POSITIONING);
+                        //Tengo que sacar el KINEMATIC para que golpee a la nave (Para que funcione el collider)
+                        //##### CUIDADO !!! si el jugger golpea un enemigo se va a mover!!! #####
+                        juggerInstanciate.GetComponent<Collider>().enabled = true;
+                        juggerInstanciate.GetComponent<Rigidbody>().isKinematic = false;
+                        juggerInstanciate.GetComponent<Animator>().SetInteger("jugComp",2); //Genero que mientras me persigue me mordisquee
+                        
+                        yield return new WaitForSeconds(TIME_JUGGER_POSITIONING); //Lo persigo por un tiempo
+                        
+                        //Tengo que poner el KINEMATIC para que no golpee nada (Para que no funcione el collider)
+                        juggerInstanciate.GetComponent<Rigidbody>().isKinematic = true;
+                        juggerInstanciate.GetComponent<Collider>().enabled = false;
+                        
+                        CantAtaks_Actual = 0; //Volvemos a 0 la variable de ataques para que la cantidad sea la misma en cada escena
                         EstadosJuegoManager = EstadosJuego.JUGGER_2_ATACK;     
 
                     break;
 
                     case EstadosJuego.JUGGER_ATACK_TIMER:
-                       
-                        yield return new WaitForSeconds(TIME_JUGGER_ATACK);
-                        int tipoAtaque = Random.Range(0,2); //Ataco de una u otra manera
-                        if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_1;
-                        if(tipoAtaque == 1)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
+
+                        if(CantAtaks_Actual != CantAtaks)
+                        {
+                            CantAtaks_Actual++;
+                            yield return new WaitForSeconds(TIME_JUGGER_ATACK);
+                            int tipoAtaque = Random.Range(0,2); //Ataco de una u otra manera
+                            if(tipoAtaque == 0)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_1;
+                            if(tipoAtaque == 1)EstadosJuegoManager = EstadosJuego.JUGGER_ATACK_2;
+                        }
+                        else
+                        {
+                            EstadosJuegoManager = EstadosJuego.JUGGER_OUT; 
+                        }
 
                     break;
 
@@ -258,14 +287,20 @@ public static EstadosJuego auxEstadosJuegos;
     {
             for(;;)
             {
-                timeScoreText.text = CalcularTiempo(Time.realtimeSinceStartup - tiempoTransc);
+                timeScoreText.text = CalcularScore(Time.timeSinceLevelLoad);
                 yield return new WaitForSeconds(1f);
             }
 
 
     }
 
-    private string CalcularTiempo(float t_segundos) //Función para convertir segundos en Horas, Minutos y Segundos
+    private string CalcularScore(float seconds)
+    {
+        
+        return Mathf.RoundToInt(seconds).ToString(); //Sacamos decimales y convertimos en string
+    }
+
+    private string CalcularTiempo(float t_segundos) //Función para convertir segundos en Horas, Minutos y Segundos. #### QUEDA OBSOLETA ####
     {
         int horas = Mathf.FloorToInt((t_segundos / 3600));
         int minutos = Mathf.FloorToInt(((t_segundos-horas*3600)/60));

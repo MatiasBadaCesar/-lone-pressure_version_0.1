@@ -18,7 +18,7 @@ public class enemyScript : MonoBehaviour
 
     IEnumerator destruirLater()
     {
-        yield return new WaitForSeconds(10);
+        yield return new WaitForSeconds(5f);
         Object.Destroy(gameObject);
     }
 }

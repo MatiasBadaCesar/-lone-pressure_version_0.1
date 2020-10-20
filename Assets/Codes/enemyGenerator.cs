@@ -26,8 +26,8 @@ public class enemyGenerator : MonoBehaviour
                 {
                     case levelMgrScript.EstadosJuego.PLAYER_IDLE: //Si estoy en la etapa de generación genero los enemigos
                         GameObject newEnemy;
-                        float secondEnemy = Random.Range(1f,2f);
-                        float velocityEnemy = Random.Range(5f,10f);
+                        //float secondEnemy = Random.Range(1f,2f);
+                        float velocityEnemy = Random.Range(7f,13f);
                         float positionYEnemy = Random.Range(-6f,6f);
                         yield return new WaitForSeconds(levelMgrScript.TIME_ENEMY_CREATION);
                         //Instanciamos a los enemigos
