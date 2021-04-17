@@ -36,13 +36,13 @@ private bool AnimInIdleState = false;
         {     
                 case levelMgrScript.EstadosJuego.JUGGER_IDLE:
 
-                        //Verificamos que el Jugger únicamente esté en modo Idle para perseguir sino lo frenamos
-                        AnimInIdleState = JuggerAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle_State");
+                    //Verificamos que el Jugger únicamente esté en modo Idle para perseguir sino lo frenamos
+                    AnimInIdleState = JuggerAnim.GetCurrentAnimatorStateInfo(0).IsName("Idle_State");
+                    distSubm = JuggerTransf.position.y - trSubmar.position.y + 2;
 
-                        distSubm = JuggerTransf.position.y - trSubmar.position.y + 2;
-                        
-                        //Perseguimos a la nave si la distancia es grande y si el Jugger no está atacando
-                        if(Mathf.Abs(distSubm) > 0.1f && AnimInIdleState == true )JuggerTransf.position = JuggerTransf.position + new Vector3(0f,distSubm*velPursuit/2*-1,0f); 
+                    //Perseguimos a la nave si la distancia es grande y si el Jugger no está atacando
+                    if(Mathf.Abs(distSubm) > 0.1f && AnimInIdleState == true )JuggerTransf.position = JuggerTransf.position + new Vector3(0f,distSubm*velPursuit/2*-1,0f); 
+
                 break;
 
                 case levelMgrScript.EstadosJuego.JUGGER_2_ATACK:   //Posiciono al Jugger en el centro para que esté listo para atacar
@@ -63,7 +63,6 @@ private bool AnimInIdleState = false;
 
     }
 
-    //private static int CANT_ATAQUES_JUGGER = 3; //Cantidad de ataque que va a realizar el jugger para pasar a la siguiente etapa
     private static float JUGGER_OUT_SCREEN = -10; //Posición en X en donde el Jugger ya no se ve
     private float velocityGoOut = 0.4f; //Velocidad con la que el Jugger se va de la pantalla
     public static bool sincronicedEnemy = false; 
@@ -76,24 +75,15 @@ private bool AnimInIdleState = false;
             {
 
                 case levelMgrScript.EstadosJuego.JUGGER_ATACK_1:
-                   
-                    //int cantAtacks_1;
 
                     //Tengo que sacar el KINEMATIC para que golpee a la nave (Para que funcione el collider)
                     GetComponent<Collider>().enabled = true;
                     GetComponent<Rigidbody>().isKinematic = false;
-
-                    //for(cantAtacks_1 = 0; cantAtacks_1 < CANT_ATAQUES_JUGGER; cantAtacks_1++)
-                    //{ //#### ANALIZANDO MEJORAS ####
-                        
-                        JuggerAnim.SetInteger("jugComp" , 2);
-                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_1);
-                        JuggerAnim.SetInteger("jugComp" , 1);
-                        yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_1);
-                        
-                        
-
-                    //}
+                  
+                    JuggerAnim.SetInteger("jugComp" , 2);
+                    yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_1);
+                    JuggerAnim.SetInteger("jugComp" , 1);
+                    yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_1);
 
                     //Tengo que poner el KINEMATIC para que no golpee nada (Para que no funcione el collider)
                     GetComponent<Rigidbody>().isKinematic = true;
@@ -104,10 +94,8 @@ private bool AnimInIdleState = false;
 
 
                 case levelMgrScript.EstadosJuego.JUGGER_ATACK_2:
-                    
                         
                     JuggerAnim.SetInteger("jugComp" , 3);
-                    while(JuggerAnim.GetCurrentAnimatorStateInfo(0).IsName("Atack_02") != true)yield return null; //Esperamos a que la animación se lance sino se producen bugs
                     yield return new WaitForSeconds(levelMgrScript.TIME_JUGGER_ANIMATION_ATACK_2_2);
                     sincronicedEnemy = true; //Le aviso al enemiGenerator que estoy haciendo el primer ataque;
                     JuggerAnim.SetInteger("jugComp" , 1);
@@ -120,9 +108,7 @@ private bool AnimInIdleState = false;
                 case levelMgrScript.EstadosJuego.JUGGER_OUT:
                     
                     JuggerAnim.SetInteger("jugComp" , 4);
-
                     sincroniceOut = true; //Le avisamos al levelMgr que ya puede reproducir los sonidos necesarios 
-
                     yield return new WaitForSeconds(2f);
 
                     while(JuggerTransf.position.x > JUGGER_OUT_SCREEN)
@@ -131,12 +117,8 @@ private bool AnimInIdleState = false;
                         yield return null;
                     }
 
-                    
-                    
                     yield return new WaitForSeconds(3f);
-                   
                     levelMgrScript.EstadosJuegoManager = levelMgrScript.EstadosJuego.ENTRADA;
-
                     Object.Destroy(this.gameObject);
 
                 break;

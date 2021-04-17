@@ -52,6 +52,8 @@
      <Compile Include="Assets\Codes\submarineScript.cs" />
      <Compile Include="Assets\Joystick Pack\Scripts\Joysticks\VariableJoystick.cs" />
      <Compile Include="Assets\Codes\levelMgrScript.cs" />
+     <Compile Include="Assets\Codes\ManagerScripts\MenuManager.cs" />
+     <Compile Include="Assets\Codes\ManagerScripts\DataManager.cs" />
      <None Include="Assets\TextMesh Pro\Shaders\TMPro.cginc" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Mobile Overlay.shader" />
      <None Include="Assets\TextMesh Pro\Shaders\TMP_Bitmap.shader" />

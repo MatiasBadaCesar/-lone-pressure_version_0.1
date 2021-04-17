@@ -84,7 +84,6 @@ public static EstadosJuego auxEstadosJuegos;
 
         //Definimos estados iniciales para cuando se recargue el juego
         EstadosJuegoManager = EstadosJuego.ENTRADA;
-        //tiempoTransc = Time.realtimeSinceStartup;  //#### DESECHADO DESDE QUE SE DESCUBRE QUE HAY UNA VARIABLE QUE TE LARGA LOS SEGUNDOS DESDE LA RECARGA ####
 
         //Comenzamos con el sonido de fondo normal
         repSonidos(soundsNames.fondoNormal, true, false, 0f);
@@ -135,10 +134,10 @@ public static EstadosJuego auxEstadosJuegos;
                
                 if(juggernautScript.sincroniceOut == true)
                 {
-                        repSonidos(soundsNames.fondoNormal, true, false, 0f); //Detenemos el sonido normal
-                        repSonidos(soundsNames.fondoJugger, false, false, 0f); //Iniciamos el sonido de Jugger de fondo
-                        repSonidos(soundsNames.juggerOut, false, true, 5f); //Iniciamos el sonido de Jugger de entrada por 3s
-                        juggernautScript.sincroniceOut = false;
+                    repSonidos(soundsNames.fondoNormal, true, false, 0f); //Detenemos el sonido normal
+                    repSonidos(soundsNames.fondoJugger, false, false, 0f); //Iniciamos el sonido de Jugger de fondo
+                    repSonidos(soundsNames.juggerOut, false, true, 5f); //Iniciamos el sonido de Jugger de entrada por 3s
+                    juggernautScript.sincroniceOut = false;
                 }
 
             break;
@@ -285,18 +284,16 @@ public static EstadosJuego auxEstadosJuegos;
 
     private IEnumerator timeCounter() //Calcula el Score dado por el tiempo
     {
-            for(;;)
-            {
-                timeScoreText.text = CalcularScore(Time.timeSinceLevelLoad);
-                yield return new WaitForSeconds(1f);
-            }
-
+        for(;;)
+        {
+            timeScoreText.text = CalcularScore(Time.timeSinceLevelLoad);
+            yield return new WaitForSeconds(1f);
+        }
 
     }
 
     private string CalcularScore(float seconds)
     {
-        
         return Mathf.RoundToInt(seconds).ToString(); //Sacamos decimales y convertimos en string
     }
 
@@ -308,6 +305,16 @@ public static EstadosJuego auxEstadosJuegos;
         return horas.ToString() + ":" + minutos.ToString() + ":" + segundos.ToString();
     }
 
+    /*
+    
+    Esta función sirve para reproducir sonidos
+    Parámetros:
+    -soundGO: Lista de sonidos predefinida en el comienzo de este script (Termina siendo un entero, solo que se hizo así para ponerle nombres)
+    -activateSound: Es para activar o desactivar el sonido
+    -oneShoot: Es para saber si el sonido se activa indefinidamente o sólo una vez -> TRUE = sólo una vez
+    -timeToSound: Tiempo en segundos si la variable anterior está en TRUE
+
+    */
     public void repSonidos(soundsNames soundGO , bool activateSound,bool oneShot, float timeToSound) {
         
         if(oneShot == true) //Si solo quiero que suene una vez y por un tiempo

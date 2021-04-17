@@ -14,15 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   SimpleSelectedItems:
     m_Keys:
-    - Assets/Codes/enemyGenerator.cs
-    - Assets/Codes/enemyScript.cs
-    - Assets/Codes/juggernautScript.cs
-    - Assets/Codes/levelMgrScript.cs
-    - Assets/Juggernaut/AtaqueEstirado_Tipo1.anim
-    - Assets/PreFaps/Jugger/Juggernaut Variant.prefab
     - 
-    m_Values: 01010101010101
-  RevisionSummary: 
+    m_Values: 01
+  RevisionSummary: "\xDCltimos cambios"
   ChangesSearchValue: 
   SelectedHistoryRevision: 
   HistoryPageNumber: 0
